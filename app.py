@@ -1,4 +1,4 @@
-import os
+import os,db
 from resources.store import Store, StoreList
 from resources.user import User, UserList, UserRegister, UserExt
 from resources.product import Product, ProductList
@@ -28,13 +28,13 @@ api = Api(app=app)
 @app.before_first_request
 def create_tables():
     db.create_all()
-    
+
 jwt = JWT(app, authenticate, identity) #creates a new end point called */auth*
 
 #User
 api.add_resource(UserRegister, "/register") #https://mistore.com/register
 api.add_resource(User, '/user/<string:username>') #https://mistore.com/gbenga
-api.add_resource(UserExt, '/id/<int:userid>')
+api.add_resource(UserExt, '/users/<int:user_id>')
 # api.add_resource(Users, '/user/<string:name>?<string:password>') #https://mistore.com/gbenga
 api.add_resource(UserList , "/users") #https://mistore.com//student
 
@@ -48,6 +48,5 @@ api.add_resource(Product, '/product/<string:productname>') #https://mistore.com/
 
 if __name__ == "__main__":
     from db import db
-
     db.init_app(app)
     app.run(port=5000, debug=True)

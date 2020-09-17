@@ -14,25 +14,18 @@ class UserList(Resource):
 #class to register user
 class UserRegister(Resource):
     parser = reqparse.RequestParser()
-    parser.add_argument(name="firstname", type=str, required=True, help="firstname cannot be blank",case_sensitive=False)
-    parser.add_argument(name="middlename", type=str, required=True, help="middlename cannot be blank",case_sensitive=False)
-    parser.add_argument(name="lastname", type=str, required=True, help="lastname cannot be blank",case_sensitive=False)
+    parser.add_argument(name="username", type=str, required=True, help="username cannot be blank",case_sensitive=False)
     parser.add_argument(name="password", type=str, required=True, help="password cannot be blank")
     parser.add_argument(name="email", type=str, required=True, help="email cannot be blank")
 
     def post(self):
         data = UserRegister.parser.parse_args()
 
-        # #check form integrety
-        # message = UserModel.check_form_integrity(username=data['username'],data=data)
-
-        # if message: return message
-
         #check if data already exist
         # if UserModel.find_by_username(username=data["username"]): return {"message" : f"username {data['username']} already exists."},400 # 400 is for bad request
+        print(data)
         if UserModel.find_by_email(email=data["email"]): return {"message" : f"email {data['email']} already exists."},400 # 400 is for bad request
-        
-        # user = UserModel.instance_from_dict(dict_=data)
+        print(data)
         user = UserModel(**data)
 
         #insert
@@ -58,10 +51,6 @@ class User(Resource):
     def put(self, username):
         
         data = UserRegister.parser.parse_args()
-        # message = UserModel.check_form_integrity(username, data)
-
-        # if message: return message
-
         user = UserModel.find_by_username(username=username)
         email = UserModel.find_by_email(email=data["email"])
         
@@ -108,7 +97,7 @@ class UserExt(Resource):
         user = UserModel.find_by_id(id=user_id)
 
         if not user: return {"message" : "User not found"}, 404
-        return user.json()
+        return {"user":user.json()}, 200
     
     @classmethod
     def delete(cls, user_id):

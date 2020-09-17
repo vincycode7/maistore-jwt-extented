@@ -7,20 +7,9 @@ class UserModel(db.Model):
     __tablename__ = "user"
 
     id = db.Column(db.Integer, primary_key=True)
-    firstname = db.Column(db.String(30))
-    middlename = db.Column(db.String(30))
-    lastname = db.Column(db.String(30))
+    username = db.Column(db.String(30))
     password = db.Column(db.String(80))
     email = db.Column(db.String(100))
-    phoneno = db.Column(db.String(15))
-    address = db.Column(db.String(300))
-
-    # joining with other database
-    # bankpayment_id = db.Column(db.Integer, db.ForeignKey('bankpayment.user_id'))
-    # bankpayment = db.relationship("BankPaymentModel")
-
-    # cryptopayment_id = db.Column(db.Integer, db.ForeignKey('cryptopayment.user_id'))
-    # cryptopayments = db.relationship("CryptoPaymentModel")
 
     stores = db.relationship("StoreModel", lazy="dynamic")
 
@@ -79,11 +68,3 @@ class UserModel(db.Model):
         #implement later
 
         return False
-
-    @classmethod
-    def instance_from_dict(cls, dict_):
-        return cls(
-                        username=dict_.get('username'), 
-                        password=dict_.get('password'), 
-                        email=dict_.get('email')
-                   )
