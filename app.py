@@ -34,6 +34,7 @@ jwt = JWTManager(app) #This doesn't create the auth endpoint
 
 #User
 api.add_resource(UserRegister, "/register") #https://mistore.com/register
+api.add_resource(UserLogin,"/login")
 api.add_resource(User, '/user/<string:username>') #https://mistore.com/gbenga
 api.add_resource(UserExt, '/users/<int:user_id>')
 # api.add_resource(Users, '/user/<string:name>?<string:password>') #https://mistore.com/gbenga
