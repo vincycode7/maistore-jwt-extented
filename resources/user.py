@@ -100,3 +100,21 @@ class User(Resource):
             return {"message" : "User deleted"}, 200 # 200 ok 
             
         return {"message" : "User Not found"}, 400 # 400 is for bad request
+
+class UserExt(Resource):
+
+    @classmethod
+    def get(cls, user_id):
+        user = UserModel.find_by_id(id=user_id)
+
+        if not user: return {"message" : "User not found"}, 404
+        return user.json()
+    
+    @classmethod
+    def delete(cls, user_id):
+        user = UserModel.find_by_id(id=user_id)
+
+        if not user: return {"message" : "User not found"}, 404
+        user.delete_from_db()
+        
+        return {"message" : "User deleted."}, 200

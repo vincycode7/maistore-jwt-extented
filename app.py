@@ -1,6 +1,6 @@
 import os
 from resources.store import Store, StoreList
-from resources.user import User, UserList, UserRegister
+from resources.user import User, UserList, UserRegister, UserExt
 from resources.product import Product, ProductList
 from flask import Flask, request
 from flask_jwt import JWT, jwt_required
@@ -26,22 +26,10 @@ app.secret_key = "vcode" #always remember to get the apps's secret key, also thi
 
 jwt = JWT(app, authenticate, identity) #creates a new end point called */auth*
 
-class PaymentList(Resource):
-    def get(self):
-        return [], 200 #return the product
-
-class Payment(Resource):
-    def get(self, paymentid):
-        return {'payment' : paymentid} #returns the list of payments
-
-    def post(self, paymentid):
-        data = request.get_json(silent=True)
-        if data == None: return {"message" : "Invalid object type, use json."}, 404
-        
-
 #User
 api.add_resource(UserRegister, "/register") #https://mistore.com/register
 api.add_resource(User, '/user/<string:username>') #https://mistore.com/gbenga
+api.add_resource(UserExt, '/id/<int:userid>')
 # api.add_resource(Users, '/user/<string:name>?<string:password>') #https://mistore.com/gbenga
 api.add_resource(UserList , "/users") #https://mistore.com//student
 
@@ -52,11 +40,6 @@ api.add_resource(StoreList, "/stores") #https://maistore.com/store
 #product
 api.add_resource(ProductList, "/products") #https://mistore.com/product
 api.add_resource(Product, '/product/<string:productname>') #https://mistore.com/product/bags
-
-
-#payment
-# api.add_resource(Payment, '/payment/<string:paymentid>') #https://mistore.com/payment/h47j32U89
-# api.add_resource(PaymentList, "/payment") #https://mistore.com/product
 
 if __name__ == "__main__":
     from db import db
