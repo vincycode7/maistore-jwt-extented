@@ -1,5 +1,7 @@
 from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required
+from werkzeug.security import safe_str_cmp
+from flask_jwt_extended import create_access_token, create_refresh_token
 from models.user import UserModel
 
 #class to list all user
@@ -107,3 +109,25 @@ class UserExt(Resource):
         user.delete_from_db()
         
         return {"message" : "User deleted."}, 200
+
+class UserLogin(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument(name="userid", type=str, required=True, help="userid cannot be blank",case_sensitive=False)
+    parser.add_argument(name="password", type=str, required=True, help="password cannot be blank")
+
+    @classmethod
+    def post(cls):
+        #get user
+        data = cls.parser.parse_args()
+
+        #find user in database
+        user = UserModel.find_by_id(id=data['userid'])
+        if user and safe_str_cmp(user.password,data['password']):
+            access_token = create_access_token(identity=user.id, fresh=True)
+            refresh_token = create_refresh_token(user.id)
+
+            return {
+                    "access_token"  : access_token,
+                    "refresh_token" : refresh_token
+                    }, 200
+        return {"message" : "Invalid credentials"}

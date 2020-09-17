@@ -1,10 +1,10 @@
 import os,db
 from resources.store import Store, StoreList
-from resources.user import User, UserList, UserRegister, UserExt
+from resources.user import User, UserList, UserRegister, UserExt, UserLogin
 from resources.product import Product, ProductList
 from flask import Flask, request
-from flask_jwt import JWT, jwt_required
-from security import authenticate, identity
+# from flask_jwt import JWT, jwt_required
+from flask_jwt_extended import JWTManager
 from flask_restful import Resource, Api, reqparse
 
 """
@@ -29,7 +29,8 @@ api = Api(app=app)
 def create_tables():
     db.create_all()
 
-jwt = JWT(app, authenticate, identity) #creates a new end point called */auth*
+# jwt = JWT(app, authenticate, identity) #creates a new end point called */auth*
+jwt = JWTManager(app) #This doesn't create the auth endpoint
 
 #User
 api.add_resource(UserRegister, "/register") #https://mistore.com/register
